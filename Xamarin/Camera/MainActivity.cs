@@ -11,9 +11,8 @@ namespace Camera
     [Activity(Label = "Camera", MainLauncher = true, Icon = "@drawable/icon")]
     public  class MainActivity : Activity
     {
-        ImageView imgview1;
-        Button camerabtn;
-        Button done;
+        ImageView _imgview1;
+        Button _camerabtn;
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -21,22 +20,22 @@ namespace Camera
             // Set our view from the "main" layout resource
             SetContentView (Resource.Layout.Main);
 
-            imgview1 = FindViewById<ImageView>(Resource.Id.imageView1);
-            camerabtn = FindViewById<Button>(Resource.Id.button1);
-            done = FindViewById<Button>(Resource.Id.button2);
+            _imgview1 = FindViewById<ImageView>(Resource.Id.capturedImageView);
+            _camerabtn = FindViewById<Button>(Resource.Id.cameraBtn);
 
-            camerabtn.Click += Camerabtn_Click;
-            done.Click += delegate { StartActivity(typeof(Activity1)); };
+            _camerabtn.Click += CameraBtn_Click;
         }
 
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
-            Bitmap bitmap = (Bitmap)data.Extras.Get("data");
-            imgview1.SetImageBitmap(bitmap);
+            if (data.Extras == null) 
+                return;
 
+            var bitmap = (Bitmap)data.Extras.Get("data");
+            _imgview1.SetImageBitmap(bitmap);
         }
-        private void Camerabtn_Click(object sender, System.EventArgs e)
+        private void CameraBtn_Click(object sender, System.EventArgs e)
         {
             Intent intent = new Intent(MediaStore.ActionImageCapture);
             StartActivityForResult(intent, 0);
